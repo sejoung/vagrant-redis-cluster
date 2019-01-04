@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
    config.vm.provider "virtualbox" do |vb|
-     vb.memory = "1024"
+     vb.memory = "2048"
 	 vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
    end

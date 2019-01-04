@@ -1,41 +1,24 @@
 #!/usr/bin/env bash
 
-REDIS_BUILD_DIR=/home/vagrant/redis-build
-REDIS_DIR=/home/vagrant/redis
-REDIS_SUPERVISOR_CONF=/etc/supervisor/conf.d/redis.conf
-REDIS_PORTS=$(seq 7000 7005)
+# Settings
+PORT=6999
+TIMEOUT=2000
+NODES=6
+REPLICAS=1
 
+# Computed vars
+ENDPORT=$((PORT+NODES))
 
-sudo rm -rf $REDIS_SUPERVISOR_CONF
-sudo supervisorctl update
-
-sudo rm -rf $REDIS_DIR
-
-sudo mkdir -p $REDIS_DIR
-
-for port in $REDIS_PORTS
-do
-    sudo mkdir -p $REDIS_DIR/$port
+while [ $((PORT < ENDPORT)) != "0" ]; do
+	PORT=$((PORT+1))
+	echo "Starting $PORT"
+	sudo redis-server --port $PORT --cluster-enabled yes --cluster-config-file nodes-${PORT}.conf --cluster-node-timeout $TIMEOUT --logfile ${PORT}.log --daemonize yes --protected-mode no
 done
 
-sudo cp /vagrant/redis.conf $REDIS_SUPERVISOR_CONF
-
-sudo rm -rf "$REDIS_DIR/$port/nodes.conf"
-
-sudo supervisorctl update
-
-sleep 2
-
-echo "======================================"
-echo "INITIALIZING REDIS CLUSTER            "
-echo "======================================"
-
-
-redis_host_list=""
-
-for port in $REDIS_PORTS
-do
-    redis_host_list="$redis_host_list 127.0.0.1:$port "
+PORT=6999
+HOSTS=""
+while [ $((PORT < ENDPORT)) != "0" ]; do
+	PORT=$((PORT+1))
+	HOSTS="$HOSTS 127.0.0.1:$PORT"
 done
-
-yes "yes" | sudo /usr/local/bin/redis-trib.rb create --replicas 1 $redis_host_list
+sudo redis-cli --cluster create $HOSTS --cluster-replicas $REPLICAS

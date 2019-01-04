@@ -17,6 +17,14 @@ $ vagrant ssh
 redis-cli -p 7000 접속
 
 
+재시작
+ 
+```
+
+$ vagrant reload
+
+```
+
 현재 실행 상태가 저장되고 중지
  
 ```
@@ -46,3 +54,20 @@ $ vagrant destroy
 * `127.0.0.1:7005`
 
 redis-stat 도 접속 가능 127.0.0.1:8080
+
+지금 레디스 버전은 5.0 브런치 기준인데 레디스를 바꾸고 싶으면 build_redis.sh의 git clone을 바꿔주고 생성 하는것을 바꿔야 된다.
+
+Redis 5
+
+```
+
+redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 --cluster-replicas 1
+
+``` 
+
+Using redis-trib.rb for Redis 4 or 3 type:
+
+```
+./redis-trib.rb create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
+
+``` 
