@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 REDIS_BUILD_DIR=/home/vagrant/redis-build
 
 # download, unpack and build redis
@@ -10,6 +11,8 @@ pushd $REDIS_BUILD_DIR
 
 make
 make install
-#sudo cp /vagrant/redis.conf /etc/redis.conf
+sudo cp /vagrant/create-cluster.sh /home/vagrant/create-cluster.sh
+sudo cp /vagrant/create-cluster.sh /home/vagrant/redis_stat_run.sh
+
 
 popd

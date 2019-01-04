@@ -22,3 +22,4 @@ while [ $((PORT < ENDPORT)) != "0" ]; do
 	HOSTS="$HOSTS 127.0.0.1:$PORT"
 done
 sudo redis-cli --cluster create $HOSTS --cluster-replicas $REPLICAS
+
